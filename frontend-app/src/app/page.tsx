@@ -4,6 +4,7 @@ import Button from "./components/button/button";
 import styles from "./page.module.css";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Container from "./components/container/container";
 
 export default function Home() {
 
@@ -15,11 +16,11 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.container}>
-        <h1 className={styles.title}>PokeCapture</h1>
-        <Image src="/pokebola.png" alt="pokebola" width={150} height={150} />
-        <Button text="Encontrar Pokémons" onClick={handleClick} className={styles.customButton} />
-      </div>
+      <Container>
+          <h1 className={styles.title}>PokeCapture</h1>
+          <Image src="/pokebola.png" alt="pokebola" width={150} height={150} />
+          <Button text="Encontrar Pokémons" onClick={handleClick} className={styles.customButton} />
+      </Container>
     </div>
 
   );
