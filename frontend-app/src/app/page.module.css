@@ -12,6 +12,7 @@
 .title {
   font-size: 3rem;
   color: #ffcc00;
+  margin-top: 20px;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.4);
 }
@@ -29,5 +30,6 @@
 }
 
 .customButton {
+  font-weight: 600;
   margin-top: 50px;
 }
