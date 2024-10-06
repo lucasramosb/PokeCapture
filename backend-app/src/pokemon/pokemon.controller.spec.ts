@@ -3,6 +3,7 @@ import { PokemonController } from './pokemon.controller';
 import { PokemonService } from './pokemon.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
+import { NotFoundException } from '@nestjs/common';
 
 describe('PokemonController', () => {
   let controller: PokemonController;
@@ -11,11 +12,13 @@ describe('PokemonController', () => {
   const mockPokemonService = {
     getPokemonRandon: jest.fn(),
     capturePokemon: jest.fn(),
+    releasePokemon: jest.fn(),
   };
 
   const mockPokemonRepository = {
     create: jest.fn(),
     save: jest.fn(),
+    delete: jest.fn(),
   };
 
   beforeAll(async () => {
@@ -75,4 +78,32 @@ describe('PokemonController', () => {
       expect(mockPokemonService.capturePokemon).toHaveBeenCalledWith(pokemon);
     });
   })
+
+  describe('releasePokemon', () => {
+    it('should call service to release a pokemon', async () => {
+      const id = 1;
+
+      mockPokemonService.releasePokemon.mockResolvedValue(undefined);
+
+      await controller.releasePokemon(id);
+
+      expect(mockPokemonService.releasePokemon).toHaveBeenCalledWith(id);
+      expect(mockPokemonService.releasePokemon).toHaveBeenCalledTimes(1);
+    });
+  
+    it('should throw NotFoundException if the pokemon does not exist', async () => {
+      const id = 1;
+
+      mockPokemonService.releasePokemon.mockRejectedValue(
+        new NotFoundException(`Pokémon with ID ${id} not found`)
+      );
+
+      await expect(controller.releasePokemon(id)).rejects.toThrow(
+        new NotFoundException(`Pokémon with ID ${id} not found`)
+      );
+
+      expect(mockPokemonService.releasePokemon).toHaveBeenCalledWith(id);
+      expect(mockPokemonService.releasePokemon).toHaveBeenCalledTimes(1);
+    });
+  });
 });

@@ -5,6 +5,7 @@ import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
 import { Repository } from 'typeorm';
 import { of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { NotFoundException } from '@nestjs/common';
 
 describe('PokemonService', () => {
   let service: PokemonService;
@@ -48,7 +49,7 @@ describe('PokemonService', () => {
         sprites: { front_default: 'bulbasaur_image_url' },
         types: [{ type: { name: 'grass' } }],
       };
-      
+
       mockHttpService.get.mockReturnValue(of({ data: pokemonResponse }));
 
       const randomPokemon = await service.getPokemonRandon();
@@ -86,6 +87,30 @@ describe('PokemonService', () => {
       });
       expect(mockPokemonRepository.save).toHaveBeenCalledWith(pokemon);
       expect(result).toEqual(pokemon);
+    });
+  });
+
+  describe('releasePokemon', () => {
+    it('should release (delete) a pokemon', async () => {
+      const id = 1;
+
+      mockPokemonRepository.delete.mockResolvedValue({ affected: 1 });
+  
+      await service.releasePokemon(id);
+
+      expect(mockPokemonRepository.delete).toHaveBeenCalledWith(id);
+    });
+  
+    it('should throw NotFoundException if the pokemon does not exist', async () => {
+      const id = 1;
+
+      mockPokemonRepository.delete.mockResolvedValue({ affected: 0 });
+
+      await expect(service.releasePokemon(id)).rejects.toThrow(
+        new NotFoundException(`Pokémon with ID ${id} not found`)
+      );
+  
+      expect(mockPokemonRepository.delete).toHaveBeenCalledWith(id);
     });
   });
 
