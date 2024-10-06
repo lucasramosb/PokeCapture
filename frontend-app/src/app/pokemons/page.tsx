@@ -124,7 +124,7 @@ export default function PokemonPage() {
                 />
                 <span>Capturar</span>
               </a>
-              <a href="" className={styles.iconContainer}>
+              <a href="/my-pokemons" className={styles.iconContainer}>
                 <Image
                   src="/pokedex.png"
                   alt="Meus Pokémons"
