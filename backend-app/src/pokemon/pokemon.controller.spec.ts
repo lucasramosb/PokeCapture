@@ -13,6 +13,7 @@ describe('PokemonController', () => {
     getPokemonRandon: jest.fn(),
     capturePokemon: jest.fn(),
     releasePokemon: jest.fn(),
+    getPokemonsCaptured: jest.fn(),
   };
 
   const mockPokemonRepository = {
@@ -104,6 +105,34 @@ describe('PokemonController', () => {
 
       expect(mockPokemonService.releasePokemon).toHaveBeenCalledWith(id);
       expect(mockPokemonService.releasePokemon).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getPokemonsCaptured', () => {
+    it('should return an array of captured Pokemons', async () => {
+      const pokemons: PokemonEntity[] = [
+        {
+          id: 1,
+          name: 'bulbasaur',
+          photo: 'bulbasaur_image_url',
+          types: ['grass'],
+          pokemonId: 1,
+        },
+        {
+          id: 2,
+          name: 'charmander',
+          photo: 'charmander_image_url',
+          types: ['fire'],
+          pokemonId: 2,
+        },
+      ];
+
+      mockPokemonService.getPokemonsCaptured.mockResolvedValue(pokemons);
+
+      const result = await controller.getPokemonsCaptured();
+
+      expect(mockPokemonService.getPokemonsCaptured).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(pokemons);
     });
   });
 });

@@ -3,7 +3,7 @@ import { PokemonService } from './pokemon.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
 import { Repository } from 'typeorm';
-import { of } from 'rxjs';
+import { find, of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { NotFoundException } from '@nestjs/common';
 
@@ -15,6 +15,7 @@ describe('PokemonService', () => {
     create: jest.fn(),
     save: jest.fn(),
     delete: jest.fn(),
+    find: jest.fn(),
   };
 
   const mockHttpService = {
@@ -113,5 +114,34 @@ describe('PokemonService', () => {
       expect(mockPokemonRepository.delete).toHaveBeenCalledWith(id);
     });
   });
+
+  describe('getPokemonsCaptured', () => {
+    it('should return an array of captured Pokemons', async () => {
+      const pokemons: PokemonEntity[] = [
+        {
+          id: 1,
+          name: 'bulbasaur',
+          photo: 'bulbasaur_image_url',
+          types: ['grass'],
+          pokemonId: 1,
+        },
+        {
+          id: 2,
+          name: 'charmander',
+          photo: 'charmander_image_url',
+          types: ['fire'],
+          pokemonId: 2,
+        },
+      ];
+
+      mockPokemonRepository.find.mockResolvedValue(pokemons);
+
+      const result = await service.getPokemonsCaptured();
+
+      expect(mockPokemonRepository.find).toHaveBeenCalledTimes(1); // Verifica se find foi chamado
+      expect(result).toEqual(pokemons); // Verifica se o resultado é igual ao array de pokemons
+    });
+  });
+
 
 });
