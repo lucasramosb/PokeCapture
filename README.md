@@ -4,7 +4,7 @@ Este é um Teste técnico da empresa Monocard.
 
 ## Descrição
 
-Uma aplicação onde o usuario pode interagir com pokémons. O usuário pode encontrar pokemons aleatoriamente, capturá-los, soltá-los e visualizar a lista de pokemons capturados.
+Uma aplicação onde o usuario pode interagir com pokémons. O usuário pode encontrar pokemons da primeira geração aleatoriamente, capturá-los, soltá-los e visualizar a lista de pokemons capturados.
 
 ## Tecnologias
 - Front-end: [NextJS](https://nextjs.org/)
