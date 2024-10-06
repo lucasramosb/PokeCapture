@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { Repository } from 'typeorm';
 import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
@@ -20,6 +20,12 @@ export class PokemonController {
 
   @Post('capture')
   async capturePokemon(@Body() pokemon: PokemonEntity): Promise<PokemonEntity> {
-      return this.pokemonService.capturePokemon(pokemon);
+    return this.pokemonService.capturePokemon(pokemon);
   }
+
+  @Delete('release/:id')
+  async releasePokemon(@Param('id') id: number): Promise<void> {
+    return this.pokemonService.releasePokemon(id);
+  }
+
 }

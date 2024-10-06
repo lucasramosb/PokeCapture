@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { map } from 'rxjs';
 import { Repository } from 'typeorm';
 import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
@@ -40,5 +40,14 @@ export class PokemonService {
       });
       return await this.pokemonRepository.save(newPokemon);
   }
+
+  async releasePokemon(id: number): Promise<void> {
+    
+    const result = await this.pokemonRepository.delete(id);
+
+    if (result.affected === 0) {
+        throw new NotFoundException(`Pokémon with ID ${id} not found`);
+    }
+}
 
 }
