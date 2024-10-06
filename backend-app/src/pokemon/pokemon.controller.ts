@@ -28,4 +28,9 @@ export class PokemonController {
     return this.pokemonService.releasePokemon(id);
   }
 
+  @Get('captured')
+  async getPokemonsCaptured(): Promise<PokemonEntity[]> {
+    return this.pokemonService.getPokemonsCaptured();
+  }
+
 }

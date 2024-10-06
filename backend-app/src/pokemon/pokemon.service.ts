@@ -48,6 +48,10 @@ export class PokemonService {
     if (result.affected === 0) {
         throw new NotFoundException(`Pokémon with ID ${id} not found`);
     }
-}
+  }
+
+  async getPokemonsCaptured(): Promise<PokemonEntity[]> {
+    return this.pokemonRepository.find();
+  }
 
 }
