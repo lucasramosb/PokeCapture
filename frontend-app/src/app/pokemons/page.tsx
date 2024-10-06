@@ -30,7 +30,7 @@ export default function PokemonPage() {
     } catch (error) {
       console.error('Erro ao buscar Pokémon', error);
 
-      toast.error("Erro ao capturar Pokémon. Tente novamente.", {
+      toast.error("Erro ao encontrar Pokémon. Tente novamente.", {
         position: "bottom-center",
         autoClose: 5000,
       });
@@ -103,7 +103,7 @@ export default function PokemonPage() {
                 <span
                   key={type}
                   className={styles.type}
-                  style={{ backgroundColor: pokemonTypeColors[type] || '#777' }}
+                  style={{ backgroundColor: pokemonTypeColors[type]}}
                 >
                   {type}
                 </span>
