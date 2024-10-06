@@ -31,7 +31,7 @@ export default function PokemonPage() {
       console.error('Erro ao buscar Pokémon', error);
 
       toast.error("Erro ao encontrar Pokémon. Tente novamente.", {
-        position: "bottom-center",
+        position: "top-right",
         autoClose: 5000,
       });
     } finally {
@@ -46,7 +46,7 @@ export default function PokemonPage() {
     try {
       await axios.post<Pokemon>('http://localhost:3001/pokemon/capture', pokemon);
       toast.success(`Pokémon ${pokemon.name} capturado com sucesso!`, {
-        position: "bottom-center",
+        position: "top-right",
         autoClose: 5000,
       });
 
