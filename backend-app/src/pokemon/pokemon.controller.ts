@@ -14,7 +14,7 @@ export class PokemonController {
   ) {}
 
   @Get()
-  async getPokemons() {
+  async getPokemons(pokemon: PokemonEntity) {
     return this.pokemonService.getPokemonRandon();
   }
 
