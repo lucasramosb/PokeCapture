@@ -10,6 +10,11 @@
 }
   
 .pokemonImageContainer {
+    background-image: url('/pokemon_forest.png');
+    background-size: cover;
+    background-position: center;
+    width: 280px;
+    height: 230px;
     border-radius: 50%;
     display: inline-block;
 }
@@ -19,8 +24,9 @@
 }
   
 .pokemonContainer h2 {
+    color: #ffcc00;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.4);
     font-size: 1.8rem;
-    margin-bottom: 5px;
 }
   
 .pokemonTypes {
@@ -66,3 +72,17 @@
     text-align: center;
     margin-top: 5px;
 }
+
+.type {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+
+  

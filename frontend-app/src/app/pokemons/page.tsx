@@ -6,6 +6,7 @@ import Container from '../components/container/container';
 import styles from './pokemons.module.css';
 import { FaArrowsRotate } from "react-icons/fa6";
 import axios from 'axios';
+import pokemonTypeColors from '../utils/pokemonTypeColor';
 
 type Pokemon = {
   name: string;
@@ -15,7 +16,7 @@ type Pokemon = {
 };
 
 export default function PokemonPage() {
-  const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+  const [pokemon, setPokemon] = useState<Pokemon | null>();
 
   const fetchRandomPokemon = async () => {
     try{
@@ -37,6 +38,11 @@ export default function PokemonPage() {
   return (
     <div className={styles.pokemonPage}>
         <Container>
+
+            <div className={styles.pokemonContainer}>
+                <h2>{pokemon.name}</h2>
+            </div>
+
             <div className={styles.pokemonImageContainer}>
                 <Image
                   src={pokemon.photo}
@@ -47,13 +53,13 @@ export default function PokemonPage() {
                 />
             </div>
 
-            <div className={styles.pokemonContainer}>
-                <h2>{pokemon.name}</h2>
+            <div>
+              {pokemon.types.map((type) => (
+              <span key={type} className={styles.type} style={{ backgroundColor: pokemonTypeColors[type] || '#777' }}>
+              {type}
+              </span>
+                ))}
             </div>
-
-            <p className={styles.pokemonTypes}>
-                {pokemon.types.join(' ')}
-            </p>
 
             <div className={styles.buttons}>
                 <a href="" className={styles.iconContainer}>
