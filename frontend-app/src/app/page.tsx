@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/');
+    router.push('/pokemons');
   };
 
   return (
