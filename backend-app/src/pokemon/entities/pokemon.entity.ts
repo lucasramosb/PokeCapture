@@ -9,6 +9,9 @@ export class PokemonEntity {
     name: string;
 
     @Column()
+    pokemonId: number;
+
+    @Column()
     photo: string;
 
     @Column("simple-array")
