@@ -27,6 +27,15 @@ export default function PokemonPage() {
     }
   };
 
+  const handleCapturePokemon = async () => {
+    try{
+      await axios.post<Pokemon>('http://localhost:3001/pokemon/capture', pokemon );
+      console.log(pokemon)
+    }catch(error){  
+      console.error('Erro ao capturar Pokémon', error);
+    }
+  }
+
   useEffect(() => {
     fetchRandomPokemon();
   }, []);
@@ -66,7 +75,7 @@ export default function PokemonPage() {
                     <FaArrowsRotate size={40} onClick={fetchRandomPokemon} className={styles.icon}/>
                     <span>Novo Pokémon</span>
                 </a>
-                <a href="" className={styles.iconContainer}>
+                <a onClick={handleCapturePokemon} className={styles.iconContainer}>
                     <Image 
                       src="/pokeballCapture.png"
                       alt="Capturar Pokémon"
