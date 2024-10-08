@@ -73,6 +73,7 @@ describe('PokemonService', () => {
         photo: 'bulbasaur_image_url',
         types: ['grass'],
         pokemonId: 1,
+        pokemonNickname: ''
       };
 
       mockPokemonRepository.create.mockReturnValue(pokemon);
@@ -124,6 +125,7 @@ describe('PokemonService', () => {
           photo: 'bulbasaur_image_url',
           types: ['grass'],
           pokemonId: 1,
+          pokemonNickname: ''
         },
         {
           id: 2,
@@ -131,6 +133,7 @@ describe('PokemonService', () => {
           photo: 'charmander_image_url',
           types: ['fire'],
           pokemonId: 2,
+          pokemonNickname: ''
         },
       ];
 
