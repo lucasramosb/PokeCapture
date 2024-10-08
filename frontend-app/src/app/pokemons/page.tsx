@@ -9,17 +9,16 @@ import axios from 'axios';
 import pokemonTypeColors from '../utils/pokemonTypeColor';
 import { toast } from 'react-toastify';
 import { CgPokemon } from "react-icons/cg";
-
-type Pokemon = {
-  name: string;
-  pokemonId: number;
-  photo: string;
-  types: string[];
-};
+import { Modal } from '../components/modal/page';
+import Button from '../components/button/button';
+import { Pokemon } from '@/types/pokemon-types';
 
 export default function PokemonPage() {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [pokemonNickName, setPokemonNickName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchRandomPokemon = async () => {
     setLoading(true);
@@ -27,6 +26,8 @@ export default function PokemonPage() {
       const response = await axios.get<Pokemon>('http://localhost:3001/pokemon');
 
       setPokemon(response.data);
+      setPokemonNickName('');
+      setErrorMessage('');
     } catch (error) {
       console.error('Erro ao buscar Pokémon', error);
 
@@ -39,37 +40,90 @@ export default function PokemonPage() {
     }
   };
 
-  const handleCapturePokemon = async () => {
-    if (!pokemon) return;
-    setLoading(true);
+  const validatePokemonNickName = async (name: string): Promise<boolean> => {
+    const nameRegex = /^[a-zA-Z\s]+$/;
 
+    if (!name) {
+      setErrorMessage('O nome não pode estar vazio.');
+      return false;
+    }
+
+    if (name.length < 5) {
+      setErrorMessage('O nome deve ter mais de 5 caracteres.');
+      return false;
+    }
+
+    if (!nameRegex.test(name)) {
+      setErrorMessage('O nome deve conter apenas letras.');
+      return false;
+    }
+
+    //verificar se o nickname já existe no banco de dados
     try {
-      await axios.post<Pokemon>('http://localhost:3001/pokemon/capture', pokemon);
-      toast.success(`Pokémon ${pokemon.name} capturado com sucesso!`, {
-        position: "top-right",
-        autoClose: 5000,
-      });
-
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      setPokemon(null);
-      
-      fetchRandomPokemon();
+      const response = await axios.get(`http://localhost:3001/pokemon/check-nickname/${name}`);
+      if (response.data === true) {
+        setErrorMessage('Já existe um Pokémon com esse nome.');
+        return false;
+      }
     } catch (error) {
-      console.error('Erro ao capturar Pokémon', error);
+      console.error('Erro ao verificar nome do Pokémon:', error);
+      setErrorMessage('Erro ao verificar o nome. Tente novamente.');
+      return false;
+    }
 
-      toast.error("Erro ao capturar Pokémon. Tente novamente.", {
+    setErrorMessage('');
+    return true;
+  };
+
+  const handleCapturePokemon = async () => {
+
+    const isValidNickName = await validatePokemonNickName(pokemonNickName);
+  
+    if (!pokemon) {
+      toast.error("Pokémon não encontrado. Tente novamente.", {
         position: "bottom-center",
         autoClose: 5000,
       });
-    } finally {
-      setLoading(false);
+      return;
+    }
+
+    if (isValidNickName) {
+      //atribui o nickname ao pokemon
+      const newPokemon = { ...pokemon, pokemonNickname: pokemonNickName };
+
+      setLoading(true);
+      closeModal();
+
+      try {
+        await axios.post<Pokemon>('http://localhost:3001/pokemon/capture', newPokemon);
+        
+        toast.success(`Pokémon ${pokemon.name} capturado com sucesso!`, {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        setPokemon(null);
+        setPokemonNickName('');
+        fetchRandomPokemon();
+      } catch (error) {
+        console.error('Erro ao capturar Pokémon:', error);
+        toast.error("Erro ao capturar Pokémon. Tente novamente.", {
+          position: "bottom-center",
+          autoClose: 5000,
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
     fetchRandomPokemon();
   }, []);
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   if (!pokemon) {
     return <div className={styles.loadingIcon}> <CgPokemon size={50} /> </div>
@@ -115,7 +169,7 @@ export default function PokemonPage() {
                 <FaArrowsRotate size={45} onClick={fetchRandomPokemon} className={styles.icon} />
                 <span>Novo Pokémon</span>
               </a>
-              <a onClick={handleCapturePokemon} className={styles.iconContainer}>
+              <a onClick={()=> setModalOpen(true)} className={styles.iconContainer}>
                 <Image
                   src="/pokeballCapture.png"
                   alt="Capturar Pokémon"
@@ -137,6 +191,30 @@ export default function PokemonPage() {
           </Container>
         </div>
       )}
+
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+            <h2 className={styles.pokemonNameModal}>{pokemon.name}</h2>
+            <Image
+                src={pokemon.photo}
+                alt={pokemon.name}
+                width={150}
+                height={150}
+              />
+            <span>Qual será o nome do seu Pokémon?</span>
+            <input
+              className={ errorMessage ? styles.inputError : styles.inputPokemonName}
+              type="text"
+              placeholder='Nome do seu Pokémon'
+              value={pokemonNickName}
+              onChange={(e) => setPokemonNickName(e.target.value)}
+            />
+            {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+            <Button text="Capturar" onClick={handleCapturePokemon} />
+        </Modal>
+      )}
+
     </div>
+    
   );
 }

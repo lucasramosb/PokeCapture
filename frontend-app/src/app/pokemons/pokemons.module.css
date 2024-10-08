@@ -94,3 +94,59 @@
     font-size: 24px;
     color: #333;
 }
+
+.modalContainer {
+    width: 320px;
+    max-height: 650px;
+    background: #333;
+    border-radius: 12px;
+    padding: 35px 32px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    position: relative;
+    margin: 0 16px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pokemonNameModal{
+    color: #ffcc00;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.4);
+    font-size: 1.8rem;
+}
+
+.inputPokemonName{
+    width: 80%;
+    height: 45px;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    box-sizing: border-box;
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+    font-size: 17px;
+}
+
+.inputPokemonName::placeholder{
+    font-size: 17px;
+    font-weight: 400;
+}
+
+.inputError{
+    width: 80%;
+    height: 45px;
+    padding: 12px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-top: 0.5em;
+    font-size: 17px;
+    border: 1px solid #F03D3E;
+}
+
+.errorMessage{
+    color: #F03D3E;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
