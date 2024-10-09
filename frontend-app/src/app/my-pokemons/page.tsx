@@ -10,13 +10,8 @@ import { useRouter } from 'next/navigation';
 import { TfiArrowCircleLeft, TfiArrowCircleRight } from 'react-icons/tfi';
 import { toast } from 'react-toastify'
 import { CgPokemon } from 'react-icons/cg';
+import { Pokemon } from '@/types/pokemon-types';
 
-type Pokemon = {
-  id: number;
-  name: string;
-  pokemonId: number;
-  photo: string;
-};
 
 export default function MyPokemons() {
   const [myPokemons, setMyPokemons] = useState<Pokemon[]>([]);
@@ -97,7 +92,7 @@ export default function MyPokemons() {
                         className={styles.pokemonImage}
                       />
                     </td>
-                    <td>{pokemon.name}</td>
+                    <td>{pokemon.pokemonNickname}</td>
                     <td>
                       <button
                         className={styles.buttonRelease}

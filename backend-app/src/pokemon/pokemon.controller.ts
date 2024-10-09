@@ -3,6 +3,7 @@ import { PokemonService } from './pokemon.service';
 import { Repository } from 'typeorm';
 import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreatePokemonDto } from './dto/create-pokemon.dto';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -19,7 +20,7 @@ export class PokemonController {
   }
 
   @Post('capture')
-  async capturePokemon(@Body() pokemon: PokemonEntity): Promise<PokemonEntity> {
+  async capturePokemon(@Body() pokemon: CreatePokemonDto): Promise<PokemonEntity> {
     return this.pokemonService.capturePokemon(pokemon);
   }
 
@@ -29,8 +30,13 @@ export class PokemonController {
   }
 
   @Get('captured')
-  async getPokemonsCaptured(): Promise<PokemonEntity[]> {
+  async getPokemonsCaptured(): Promise<CreatePokemonDto[]> {
     return this.pokemonService.getPokemonsCaptured();
+  }
+
+  @Get('check-nickname/:nickname')
+  async checkPokemonNickname(@Param('nickname') nickname: string): Promise<boolean> {
+    return this.pokemonService.checkPokemonNickname(nickname);
   }
 
 }

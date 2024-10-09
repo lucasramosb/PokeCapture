@@ -1,9 +1,10 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { map } from 'rxjs';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { PokemonEntity } from '../pokemon/entities/pokemon.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreatePokemonDto } from './dto/create-pokemon.dto';
 
 @Injectable()
 export class PokemonService {
@@ -24,6 +25,7 @@ export class PokemonService {
         const pokemon: PokemonEntity = {
           id: undefined,
           name: reposnse.name,
+          pokemonNickname: undefined,
           pokemonId: reposnse.id,
           photo: reposnse.sprites.front_default,
           types: reposnse.types.map((type) => type.type.name)
@@ -31,14 +33,11 @@ export class PokemonService {
       return pokemon;
   }
 
-  async capturePokemon(pokemon: PokemonEntity): Promise<PokemonEntity> {
-      const newPokemon = this.pokemonRepository.create({
-          name: pokemon.name,
-          pokemonId: pokemon.pokemonId,
-          photo: pokemon.photo,
-          types: pokemon.types
-      });
-      return await this.pokemonRepository.save(newPokemon);
+  async capturePokemon(pokemon: CreatePokemonDto): Promise<PokemonEntity> {
+
+    await this.validatePokemonNickName(pokemon.pokemonNickname);
+
+    return this.pokemonRepository.save(pokemon);
   }
 
   async releasePokemon(id: number): Promise<void> {
@@ -50,8 +49,40 @@ export class PokemonService {
     }
   }
 
-  async getPokemonsCaptured(): Promise<PokemonEntity[]> {
+  async getPokemonsCaptured(): Promise<CreatePokemonDto[]> {
+    
     return this.pokemonRepository.find();
+  }
+
+  async checkPokemonNickname(nickname: string): Promise<boolean> {
+    const existPokemon = await this.pokemonRepository.findOne({
+      where: {pokemonNickname: ILike(nickname)}
+    })
+
+    return !!existPokemon;
+  }
+
+  async validatePokemonNickName(pokemonNickname: string): Promise<void> {
+    const nameRegex = /^[a-zA-Z\s]+$/;
+
+    if (!pokemonNickname) {
+      throw new BadRequestException('O nome não pode estar vazio.');
+    }
+
+    if (pokemonNickname.length < 5) {
+      throw new BadRequestException('O nome deve ter mais de 5 caracteres.');
+    }
+
+    if (!nameRegex.test(pokemonNickname)) {
+      throw new BadRequestException('O nome deve conter apenas letras.');
+    }
+
+    const existPokemon = await this.pokemonRepository.findOne({
+      where: {pokemonNickname: ILike(pokemonNickname)}
+    })
+    if (existPokemon) {
+      throw new BadRequestException('Já existe um Pokémon com esse nome.');
+    }
   }
 
 }
